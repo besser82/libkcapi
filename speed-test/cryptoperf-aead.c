@@ -17,7 +17,7 @@
  * DAMAGE.
  */
 
-#include "cryptoperf.h"
+#include <cryptoperf.h>
 #include <sys/user.h>
 
 /****************************************************************************
@@ -29,11 +29,11 @@ static int cp_aead_init_test(struct cp_test *test, size_t len, int enc, int ccm,
 {
 	unsigned char *input = NULL;
 	unsigned char *output = NULL;
-#define MAX_KEYLEN 64
+#define MAX_KEYLEN_AEAD 64
 #define TAGLEN 16
 #define BLOCKLEN 16
-	unsigned char data[MAX_KEYLEN];
-	unsigned char ivrand[MAX_KEYLEN];
+	unsigned char data[MAX_KEYLEN_AEAD];
+	unsigned char ivrand[MAX_KEYLEN_AEAD];
 	unsigned char *ivdata = NULL;
 	uint32_t ivlen = 0;
 
@@ -51,7 +51,7 @@ static int cp_aead_init_test(struct cp_test *test, size_t len, int enc, int ccm,
 		goto out;
 	}
 
-	if (test->u.aead.keysize > MAX_KEYLEN) {
+	if (test->u.aead.keysize > MAX_KEYLEN_AEAD) {
 		printf(DRIVER_NAME": key length for cipher %s too large\n",
 		       test->driver_name);
 		goto out;
@@ -316,7 +316,7 @@ struct cp_aead_tests {
 	unsigned int ccm;
 };
 
-static const struct cp_aead_tests testcases[] = {
+static const struct cp_aead_tests testcases_aead[] = {
 
 	{ "AES(G) GCM(G) 128", "gcm(aes-generic)", 16, 16, 0 },
 	{ "AES(G) GCM(G) 192", "gcm(aes-generic)", 24, 16, 0 },
@@ -335,7 +335,7 @@ static const struct cp_aead_tests testcases[] = {
 	{ "AES(AESNI) CCM(G) 256", "ccm(aes-aesni)", 32, 16, 1 },
 };
 
-static struct cp_test cp_aead_testdef[(2 * (ARRAY_SIZE(testcases)))];
+static struct cp_test cp_aead_testdef[(2 * (ARRAY_SIZE(testcases_aead)))];
 
 void cp_aead_register(struct cp_test **aead_test, size_t *entries)
 {
@@ -343,27 +343,27 @@ void cp_aead_register(struct cp_test **aead_test, size_t *entries)
 	size_t j = 0;
 
 	for (i = 0, j = 0;
-	     i < (ARRAY_SIZE(testcases)) && j < (2 * ARRAY_SIZE(testcases));
+	     i < (ARRAY_SIZE(testcases_aead)) && j < (2 * ARRAY_SIZE(testcases_aead));
 	     i++, j++) {
 		int enc = 0;
 		for (enc = 0; enc < 2; enc++) {
 			j += enc;
 			cp_aead_testdef[j].enc = enc;
-			cp_aead_testdef[j].testname = testcases[i].testname;
-			cp_aead_testdef[j].driver_name = testcases[i].driver_name;
+			cp_aead_testdef[j].testname = testcases_aead[i].testname;
+			cp_aead_testdef[j].driver_name = testcases_aead[i].driver_name;
 			cp_aead_testdef[j].type = "aead";
 			cp_aead_testdef[j].exectime = DFLT_EXECTIME;
-			cp_aead_testdef[j].u.aead.keysize = testcases[i].keysize;
-			cp_aead_testdef[j].u.aead.assoclen = testcases[i].assoclen;
+			cp_aead_testdef[j].u.aead.keysize = testcases_aead[i].keysize;
+			cp_aead_testdef[j].u.aead.assoclen = testcases_aead[i].assoclen;
 			if (enc) {
-				if (testcases[i].ccm)
+				if (testcases_aead[i].ccm)
 					cp_aead_testdef[j].init_test =
 						cp_aead_init_enc_ccm;
 				else
 					cp_aead_testdef[j].init_test =
 						cp_aead_init_enc_dflt;
 			} else {
-				if (testcases[i].ccm)
+				if (testcases_aead[i].ccm)
 					cp_aead_testdef[j].init_test =
 						cp_aead_init_dec_ccm;
 				else

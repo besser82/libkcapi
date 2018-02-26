@@ -18,6 +18,9 @@
  */
 
 #define _GNU_SOURCE
+
+#include <app-internal.h>
+
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <errno.h>
@@ -30,15 +33,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
-
 #include <linux/random.h>
+
 #ifdef HAVE_GETRANDOM
 #include <sys/random.h>
 #endif
 
 #include <kcapi.h>
-
-#include "app-internal.h"
 
 /* For efficiency reasons, this should be identical to algif_rng.c:MAXSIZE. */
 #define KCAPI_RNG_BUFSIZE  128

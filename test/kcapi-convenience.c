@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+
+#include <kcapi_common_config.h>
 #include <kcapi.h>
 
 static int hashtest(void)

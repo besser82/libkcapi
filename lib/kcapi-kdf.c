@@ -51,8 +51,8 @@
 #include <limits.h>
 #include <time.h>
 
-#include "kcapi.h"
-#include "internal.h"
+#include <kcapi.h>
+#include <internal.h>
 
 static inline uint32_t rol32(uint32_t x, int n)
 {

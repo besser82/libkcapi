@@ -33,7 +33,7 @@ extern "C"
 
 /*
  * Flags for the encrypt / decrypt operations
- * 
+ *
  * @KCAPI_ACCESS_HEURISTIC Allow the libkcapi heuristic to determine the
  * optimal kernel access type
  * @KCAPI_ACCESS_VMSPLICE Require libkcapi to always use the vmsplice zero
@@ -47,7 +47,7 @@ extern "C"
 
 /*
  * Flags for initializing a cipher handle
- * 
+ *
  * @KCAPI_INIT_AIO Handle uses AIO kernel interface if available
  */
 #define KCAPI_INIT_AIO			(1<<0)

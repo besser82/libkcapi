@@ -32,9 +32,14 @@
 #include <sys/utsname.h>
 #include <sys/prctl.h>
 
-#include "cryptouser.h"
-#include "kcapi.h"
-#include "internal.h"
+#ifdef HAVE_LINUX_CRYPTOUSER_H
+#include <linux/cryptouser.h>
+#else
+#include <cryptouser.h>
+#endif
+
+#include <kcapi.h>
+#include <internal.h>
 
 /************************************************************
  * Common helper used within the lib and as an API

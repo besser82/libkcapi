@@ -19,6 +19,9 @@
 
 /* includes for vmsplice tests */
 #define _GNU_SOURCE
+
+#include <kcapi_common_config.h>
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/uio.h>
@@ -35,15 +38,17 @@
 #include <time.h>
 #include <sys/utsname.h>
 #include <linux/random.h>
+
 #ifdef HAVE_GETRANDOM
 #include <sys/random.h>
 #endif
+
 #include <sys/syscall.h>
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "kcapi.h"
+#include <kcapi.h>
 
 enum type {
 	SYM = 1,
@@ -418,7 +423,7 @@ out:
 	return ret;
 }
 
-/* 
+/*
  * kcapi -h -x 2 -c "authenc(hmac(sha1),cbc(aes))" -d 2
  * kcapi -h -x 2 -c "gcm(aes)" -d 100
  */
@@ -1177,7 +1182,7 @@ static int cavs_aead(struct kcapi_cavs *cavs_test, uint32_t loops,
 						   cavs_test->assoclen,
 						   cavs_test->taglen);
 
-	/* 
+	/*
 	 * For the splice operation, this test performs a special memory
 	 * structure test to invoke all kernel code paths available.
 	 * This special handling is not needed for regular operation
@@ -1209,7 +1214,7 @@ static int cavs_aead(struct kcapi_cavs *cavs_test, uint32_t loops,
 				 &i_assoc, &i_assoclen, &i_data, &i_datalen,
 				 &i_tag, &i_taglen);
 
-	/* 
+	/*
 	 * place CT where PT was: With the old kernel, AAD is seeked forward
 	 * during output (assoclen != 0). With the new kernel, the AAD seek
 	 * is removed (assoclen == 0) which is the indicator that the output
@@ -1268,7 +1273,7 @@ static int cavs_aead(struct kcapi_cavs *cavs_test, uint32_t loops,
 				bin2print(assoc, assoclen);
 			bin2print(data, datalen);
 
-			if (tag && taglen) 
+			if (tag && taglen)
 				bin2print(tag, taglen);
 			printf("\n");
 		}
@@ -1451,7 +1456,7 @@ static int cavs_aead_aio(struct kcapi_cavs *cavs_test, uint32_t loops,
 				bin2print(assoc + (i * maxbuflen), assoclen);
 			bin2print(data + (i * maxbuflen), datalen);
 
-			if (tag && taglen) 
+			if (tag && taglen)
 				bin2print(tag + (i * maxbuflen), taglen);
 		}
 		printf("\n");
@@ -1723,7 +1728,7 @@ static int cavs_aead_stream(struct kcapi_cavs *cavs_test, uint32_t loops,
 				bin2print(assoc, assoclen);
 			bin2print(data, datalen);
 
-			if (tag && taglen) 
+			if (tag && taglen)
 				bin2print(tag, taglen);
 			printf("\n");
 		}
@@ -2129,7 +2134,7 @@ static int cavs_asym_aio(struct kcapi_cavs *cavs_test, uint32_t loops,
 		if (!inbuf)
 			goto out;
 	}
-	
+
 	iniov_p = iniov;
 	outiov_p = outiov;
 	for (i = 0; i < loops; i++) {
@@ -2275,7 +2280,7 @@ static int cavs_asym_stream(struct kcapi_cavs *cavs_test, uint32_t loops,
 		goto out;
 	}
 
-	/* 
+	/*
 	 * This check is aligned with the branch in
 	 * kcapi_akcipher_stream_update[|_last].
 	 */
@@ -2572,7 +2577,7 @@ out:
  * ./kcapi -x 8 -c "hmac(sha1)" -k 73616c74 -p 70617373776f7264 -d 4096 -b 20
  * 4b007901b765489abead49d926f721d065a429c1
  *
- * ./kcapi -x 8 -c "hmac(sha1)" -k 73616c74 -p 70617373776f7264 -d 16777216 -b 20 
+ * ./kcapi -x 8 -c "hmac(sha1)" -k 73616c74 -p 70617373776f7264 -d 16777216 -b 20
  * eefe3d61cd4da4e4e9945b3d6ba2158c2634e984
  *
  * ./kcapi -x 8 -c "hmac(sha1)" -k 73616c7453414c5473616c7453414c5473616c7453414c5473616c7453414c5473616c74 -p 70617373776f726450415353574f524470617373776f7264 -d 4096 -b 25

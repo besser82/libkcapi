@@ -17,9 +17,9 @@
  * DAMAGE.
  */
 
+#include <cryptoperf.h>
 #include <getopt.h>
 #include <string.h>
-#include "cryptoperf.h"
 
 #define MAXNAMELEN 30
 struct test_array {

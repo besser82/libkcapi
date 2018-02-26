@@ -57,8 +57,8 @@
 #include <limits.h>
 
 #include <kcapi.h>
-
-#include "app-internal.h"
+#include <kcapi-version.h>
+#include <app-internal.h>
 
 static uint8_t fipscheck_hmackey[] = "orboDeJITITejsirpADONivirpUkvarP";
 static uint8_t hmaccalc_hmackey[] = "FIPS-FTW-RHT2009";
@@ -88,14 +88,14 @@ static void version(char *name)
 
 	memset(version, 0, 20);
 	kcapi_versionstring(version, 20);
-	
+
 	fprintf(stderr, "%s: %s\n", basename(name), version);
 }
 
 static int hasher(struct kcapi_handle *handle, char *filename,
 		  const char *comphash, uint32_t comphashlen,
 		  FILE *outfile)
-{	
+{
 	int fd = -1;
 	int ret = 0;
 	struct stat sb;
@@ -235,7 +235,7 @@ static int hash_files(char *hashname, char *filename[], uint32_t files,
 	struct kcapi_handle *handle;
 	uint32_t i = 0;
 	int ret = 0;
-	
+
 	ret = kcapi_md_init(&handle, hashname, 0);
 	if (ret) {
 		fprintf(stderr, "Allocation of %s cipher failed (ret=%d)\n",
@@ -250,7 +250,7 @@ static int hash_files(char *hashname, char *filename[], uint32_t files,
 			return -EINVAL;
 		}
 	}
-	
+
 	if (files) {
 		for (i = 0; i < files; i++) {
 			FILE *out = stdout;
@@ -688,7 +688,7 @@ int main(int argc, char *argv[])
 	while (1) {
 		int opt_index = 0;
 		int c = getopt_long(argc, argv, "c:qsvk:b:h", opts, &opt_index);
-		
+
 		if (-1 == c)
 			break;
 		switch (c) {
@@ -850,7 +850,7 @@ int main(int argc, char *argv[])
 			goto out;
 		optind++;
 	}
-	
+
 	if (checkfile) {
 		ret = process_checkfile(hash, checkfile, targetfile, loglevel,
 					hmackey, hmackeylen);
@@ -874,6 +874,6 @@ out:
 		kcapi_memset_secure(hmackey, 0, hmackeylen);
 		free(hmackey);
 	}
-	
+
 	return ret;
 }

@@ -18,8 +18,8 @@
  * DAMAGE.
  */
 
-#include "internal.h"
-#include "kcapi.h"
+#include <internal.h>
+#include <kcapi.h>
 
 DSO_PUBLIC
 int kcapi_kpp_init(struct kcapi_handle **handle, const char *ciphername,

@@ -18,13 +18,13 @@
  * DAMAGE.
  */
 
+#include <internal.h>
+#include <kcapi.h>
+
 #include <linux/random.h>
 #ifdef HAVE_GETRANDOM
 #include <sys/random.h>
 #endif
-
-#include "internal.h"
-#include "kcapi.h"
 
 DSO_PUBLIC
 int kcapi_rng_init(struct kcapi_handle **handle, const char *ciphername,

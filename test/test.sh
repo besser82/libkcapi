@@ -1019,7 +1019,7 @@ auxtest()
 	else
 		echo_pass "Auxiliary test"
 	fi
-	
+
 }
 
 kdftest()

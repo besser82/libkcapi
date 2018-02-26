@@ -1,3 +1,0 @@
-* Include linux/cryptouser.h once available in user space and remove header
-  file copy from libkcapi code base.
-

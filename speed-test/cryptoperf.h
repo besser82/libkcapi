@@ -20,7 +20,7 @@
 #ifndef CRYPTOPERF_H
 #define CRYPTOPERF_H
 
-#define _GNU_SOURCE
+#define _POSIX_C_SOURCE 200809L
 
 #include <stdint.h>
 #include <stdio.h>
@@ -33,7 +33,8 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "kcapi.h"
+#include <kcapi_common_config.h>
+#include <kcapi.h>
 
 #define DRIVER_NAME "cryptoperf"
 

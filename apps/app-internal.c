@@ -17,20 +17,17 @@
  * DAMAGE.
  */
 
+#include <app-internal.h>
+
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <limits.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/stat.h>
-
-#include "app-internal.h"
 
 static unsigned int verbosity = KCAPI_LOG_NONE;
 char appname[16];

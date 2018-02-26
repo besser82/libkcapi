@@ -17,9 +17,8 @@
  * DAMAGE.
  */
 
+#include <cryptoperf.h>
 #include <stdlib.h>
-
-#include "cryptoperf.h"
 
 /****************************************************************************
  * Synchronous symmetric ciphers
@@ -28,8 +27,8 @@
 static int cp_hash_init_test(struct cp_test *test, size_t len, unsigned int aio)
 {
 	unsigned char *scratchpad = NULL;
-#define MAX_KEYLEN 128
-	unsigned char data[MAX_KEYLEN];
+#define MAX_KEYLEN_HASH 128
+	unsigned char data[MAX_KEYLEN_HASH];
 
 	(void)aio;
 
@@ -48,7 +47,7 @@ static int cp_hash_init_test(struct cp_test *test, size_t len, unsigned int aio)
 
 	/* HMAC */
 	if (test->u.hash.hmac) {
-		if (kcapi_md_blocksize(test->u.hash.handle) > MAX_KEYLEN) {
+		if (kcapi_md_blocksize(test->u.hash.handle) > MAX_KEYLEN_HASH) {
 			printf(DRIVER_NAME": key length for cipher %s too large %u\n",
 			       test->driver_name,
 			       kcapi_md_blocksize(test->u.hash.handle));
@@ -111,7 +110,7 @@ struct cp_hash_tests {
 	unsigned int hmac;
 };
 
-static const struct cp_hash_tests testcases[] = {
+static const struct cp_hash_tests testcases_hash[] = {
 	{ "SHA-1(G)", "sha1-generic", 0 },
 	{ "SHA-224(G)", "sha224-generic", 0 },
 	{ "SHA-256(G)", "sha256-generic", 0 },
@@ -164,19 +163,19 @@ static const struct cp_hash_tests testcases[] = {
 	{ "HMAC MD5(MV-CESA)", "mv-hmac-md5", 1 },
 };
 
-static struct cp_test cp_hash_testdef[(ARRAY_SIZE(testcases))];
+static struct cp_test cp_hash_testdef[(ARRAY_SIZE(testcases_hash))];
 
 void cp_hash_register(struct cp_test **hash_test, size_t *entries)
 {
 	size_t i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(testcases); i++) {
+	for (i = 0; i < ARRAY_SIZE(testcases_hash); i++) {
 		cp_hash_testdef[i].enc = 0;
-		cp_hash_testdef[i].testname = testcases[i].testname;
-		cp_hash_testdef[i].driver_name = testcases[i].driver_name;
+		cp_hash_testdef[i].testname = testcases_hash[i].testname;
+		cp_hash_testdef[i].driver_name = testcases_hash[i].driver_name;
 		cp_hash_testdef[i].type = "hash";
 		cp_hash_testdef[i].exectime = DFLT_EXECTIME;
-		cp_hash_testdef[i].u.hash.hmac = testcases[i].hmac;
+		cp_hash_testdef[i].u.hash.hmac = testcases_hash[i].hmac;
 		cp_hash_testdef[i].init_test = cp_hash_init_test;
 		cp_hash_testdef[i].fini_test = cp_hash_fini_test;
 		cp_hash_testdef[i].exec_test = cp_hash_test;

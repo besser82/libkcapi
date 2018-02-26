@@ -17,7 +17,7 @@
  * DAMAGE.
  */
 
-#include "cryptoperf.h"
+#include <cryptoperf.h>
 #include <stdlib.h>
 #include <sys/user.h>
 
@@ -29,8 +29,8 @@ static int cp_skcipher_init_test(struct cp_test *test, size_t len,
 				 unsigned int aio)
 {
 	unsigned char *scratchpad = NULL;
-#define MAX_KEYLEN 64
-	unsigned char data[MAX_KEYLEN];
+#define MAX_KEYLEN_SKCIPHER 64
+	unsigned char data[MAX_KEYLEN_SKCIPHER];
 	unsigned char *ivdata = NULL;
 	unsigned int bs;
 	int err;
@@ -49,7 +49,7 @@ static int cp_skcipher_init_test(struct cp_test *test, size_t len,
 		goto out;
 	}
 
-	if (test->u.skcipher.keysize > MAX_KEYLEN) {
+	if (test->u.skcipher.keysize > MAX_KEYLEN_SKCIPHER) {
 		printf(DRIVER_NAME": key length for cipher %s too large\n",
 		       test->driver_name);
 		goto out;
@@ -178,7 +178,7 @@ struct cp_skcipher_tests {
 	unsigned int keysize;
 };
 
-static const struct cp_skcipher_tests testcases[] = {
+static const struct cp_skcipher_tests testcases_skcipher[] = {
 
 	{ "AES(G) CBC(G) 128", "cbc(aes-generic)", 16 },
 	{ "AES(G) CBC(G) 192", "cbc(aes-generic)", 24 },
@@ -445,26 +445,26 @@ static const struct cp_skcipher_tests testcases[] = {
 	{ "Salsa20(x86) 256", "salsa20-asm", 32 },
 };
 
-static struct cp_test cp_skcipher_testdef[2 * (ARRAY_SIZE(testcases))];
+static struct cp_test cp_skcipher_testdef[2 * (ARRAY_SIZE(testcases_skcipher))];
 
 void cp_skcipher_register(struct cp_test **skcipher_test, size_t *entries)
 {
 	size_t i, j;
 
 	for (i = 0, j = 0;
-	     i < (ARRAY_SIZE(testcases)) && j < (2 * ARRAY_SIZE(testcases));
+	     i < (ARRAY_SIZE(testcases_skcipher)) && j < (2 * ARRAY_SIZE(testcases_skcipher));
 	     i++, j++) {
 		int enc = 0;
 		for (enc = 0; enc < 2; enc++) {
 			j += enc;
 			cp_skcipher_testdef[j].enc = enc;
-			cp_skcipher_testdef[j].testname = testcases[i].testname;
+			cp_skcipher_testdef[j].testname = testcases_skcipher[i].testname;
 			cp_skcipher_testdef[j].driver_name =
-				testcases[i].driver_name;
+				testcases_skcipher[i].driver_name;
 			cp_skcipher_testdef[j].type = "skcipher";
 			cp_skcipher_testdef[j].exectime = DFLT_EXECTIME;
 			cp_skcipher_testdef[j].u.skcipher.keysize =
-				testcases[i].keysize;
+				testcases_skcipher[i].keysize;
 			cp_skcipher_testdef[j].init_test = cp_skcipher_init_test;
 			cp_skcipher_testdef[j].fini_test = cp_skcipher_fini_test;
 			if (enc)

@@ -31,7 +31,7 @@
 #include <getopt.h>
 #include <limits.h>
 
-#include "app-internal.h"
+#include <app-internal.h>
 
 struct opt_data {
 	const char *infile;

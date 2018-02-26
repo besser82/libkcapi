@@ -45,6 +45,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <kcapi_common_config.h>
+#include <docproc-config.h>
+
 /* exitstatus is used to keep track of any failing calls to kernel-doc,
  * but execution continues. */
 int exitstatus = 0;
@@ -65,8 +68,7 @@ FILELINE * docsection;
 
 #define MAXLINESZ     2048
 #define MAXFILES      250
-#define KERNELDOCPATH "doc/bin/"
-#define KERNELDOC     "kernel-doc"
+#define KERNELDOC     "kcapi-doc"
 #define DOCBOOK       "-docbook"
 #define LIST          "-list"
 #define FUNCTION      "-function"
@@ -74,7 +76,15 @@ FILELINE * docsection;
 #define NODOCSECTIONS "-no-doc-sections"
 #define SHOWNOTFOUND  "-show-not-found"
 
-static char *srctree, *kernsrctree;
+static char *srctree = SRCTREE;
+
+char *const envp[] =
+{
+	"KBUILD_SRC=" KERNSRCTREE,
+	"LIBVERSION=" LIBVERSION,
+	"SRCTREE=" SRCTREE,
+	NULL
+};
 
 static char **all_list = NULL;
 static int all_list_len = 0;
@@ -99,8 +109,6 @@ static void usage (void)
 	fprintf(stderr, "Input is read from file.tmpl. Output is sent to stdout\n");
 	fprintf(stderr, "doc: frontend when generating kernel documentation\n");
 	fprintf(stderr, "depend: generate list of files referenced within file\n");
-	fprintf(stderr, "Environment variable SRCTREE: absolute path to sources.\n");
-	fprintf(stderr, "                     KBUILD_SRC: absolute path to kernel source tree.\n");
 }
 
 /*
@@ -119,10 +127,8 @@ static void exec_kernel_doc(char **svec)
 			exit(1);
 		case  0:
 			memset(real_filename, 0, sizeof(real_filename));
-			strncat(real_filename, kernsrctree, PATH_MAX);
-			strncat(real_filename, "/" KERNELDOCPATH KERNELDOC,
-					PATH_MAX - strlen(real_filename));
-			execvp(real_filename, svec);
+			strncat(real_filename, KERNELDOCPATH "/" KERNELDOC, PATH_MAX);
+			execvpe(real_filename, svec, envp);
 			fprintf(stderr, "exec ");
 			perror(real_filename);
 			exit(1);
@@ -154,7 +160,7 @@ int symfilecnt = 0;
 static void add_new_symbol(struct symfile *sym, char * symname)
 {
 	sym->symbollist =
-          realloc(sym->symbollist, (sym->symbolcnt + 1) * sizeof(char *));
+          realloc(sym->symbollist, (sym->symbolcnt + 1) * sizeof(struct symbols));
 	sym->symbollist[sym->symbolcnt++].name = strdup(symname);
 }
 
@@ -356,11 +362,11 @@ static void find_all_symbols(char *filename)
 {
 	char *vec[4]; /* kerneldoc -list file NULL */
 	pid_t pid;
-	int ret, i, count, start;
+	int ret, count, start;
 	char real_filename[PATH_MAX + 1];
 	int pipefd[2];
 	char *data, *str;
-	size_t data_len = 0;
+	size_t i, data_len = 0;
 
 	vec[0] = KERNELDOC;
 	vec[1] = LIST;
@@ -380,10 +386,8 @@ static void find_all_symbols(char *filename)
 			close(pipefd[0]);
 			dup2(pipefd[1], 1);
 			memset(real_filename, 0, sizeof(real_filename));
-			strncat(real_filename, kernsrctree, PATH_MAX);
-			strncat(real_filename, "/" KERNELDOCPATH KERNELDOC,
-					PATH_MAX - strlen(real_filename));
-			execvp(real_filename, vec);
+			strncat(real_filename, KERNELDOCPATH "/" KERNELDOC, PATH_MAX);
+			execvpe(real_filename, vec, envp);
 			fprintf(stderr, "exec ");
 			perror(real_filename);
 			exit(1);
@@ -411,7 +415,7 @@ static void find_all_symbols(char *filename)
 
 	count = 0;
 	/* poor man's strtok, but with counting */
-	for (i = 0; i < (int)data_len; i++) {
+	for (i = 0; i < data_len; i++) {
 		if (data[i] == '\n') {
 			count++;
 			data[i] = '\0';
@@ -421,7 +425,7 @@ static void find_all_symbols(char *filename)
 	all_list_len += count;
 	all_list = realloc(all_list, sizeof(char *) * all_list_len);
 	str = data;
-	for (i = 0; i < (int)data_len && start != all_list_len; i++) {
+	for (i = 0; i < data_len && start != all_list_len; i++) {
 		if (data[i] == '\0') {
 			all_list[start] = str;
 			str = data + i + 1;
@@ -503,12 +507,6 @@ int main(int argc, char *argv[])
 	FILE * infile;
 	int i;
 
-	srctree = getenv("SRCTREE");
-	if (!srctree)
-		srctree = getcwd(NULL, 0);
-	kernsrctree = getenv("KBUILD_SRC");
-	if (!kernsrctree || !*kernsrctree)
-		kernsrctree = srctree;
 	if (argc != 3) {
 		usage();
 		exit(1);

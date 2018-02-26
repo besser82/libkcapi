@@ -37,6 +37,9 @@
 
 #include <linux/if_alg.h>
 
+#include <kcapi_common_config.h>
+#include <kcapi-version.h>
+
 #ifdef __cplusplus
 extern "C"
 {

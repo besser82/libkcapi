@@ -18,6 +18,8 @@
  */
 
 #include <stdio.h>
+
+#include <kcapi_common_config.h>
 #include <kcapi.h>
 
 int main(int argc, char *argv[])

@@ -17,7 +17,7 @@
  * DAMAGE.
  */
 
-#include "cryptoperf.h"
+#include <cryptoperf.h>
 
 /**
  * Execute one particular test and record the timing information

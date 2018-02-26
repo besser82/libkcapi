@@ -20,8 +20,13 @@
 #ifndef APP_INTERNAL_H
 #define APP_INTERNAL_H
 
-#include <stdint.h>
+#define _POSIX_C_SOURCE 200809L
 
+#include <stdint.h>
+#include <stdio.h>
+#include <sys/stat.h>
+
+#include <kcapi_common_config.h>
 #include <kcapi.h>
 
 #ifdef __cplusplus

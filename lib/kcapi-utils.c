@@ -18,8 +18,8 @@
  * DAMAGE.
  */
 
-#include "internal.h"
-#include "kcapi.h"
+#include <internal.h>
+#include <kcapi.h>
 
 DSO_PUBLIC
 void kcapi_set_verbosity(enum kcapi_verbosity level)

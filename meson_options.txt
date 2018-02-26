@@ -1,0 +1,33 @@
+# Library configuration.
+option('LIB_SYM',  type: 'boolean', value: true)
+option('LIB_MD',   type: 'boolean', value: true)
+option('LIB_KDF',  type: 'boolean', value: true)
+option('LIB_AEAD', type: 'boolean', value: true)
+option('LIB_RNG',  type: 'boolean', value: true)
+option('LIB_ASYM', type: 'boolean', value: false)
+option('LIB_KPP',  type: 'boolean', value: false)
+
+
+# Additional apps.  Always built,
+# setting to `true` installs the app.
+option('HASHER',  type: 'boolean', value: false)
+option('RNGAPP',  type: 'boolean', value: false)
+option('ENCAPP',  type: 'boolean', value: false)
+option('DGSTAPP', type: 'boolean', value: false)
+
+
+# Testsuite and benchmark.
+option('SPEED', type: 'boolean', value: false)
+option('TEST',  type: 'boolean', value: false)
+
+
+# Documentation.
+option('MAN',  type: 'boolean', value: true)
+option('HTML', type: 'boolean', value: true)
+option('PDF',  type: 'boolean', value: false)
+option('PS',   type: 'boolean', value: false)
+
+
+# Additional configurable directories.
+option('docdir',       type: 'string', value: '')
+option('pkgconfigdir', type: 'string', value: '')

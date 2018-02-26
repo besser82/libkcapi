@@ -17,7 +17,7 @@
  * DAMAGE.
  */
 
-#include "cryptoperf.h"
+#include <cryptoperf.h>
 
 /****************************************************************************
  * Random Number Generators
@@ -91,7 +91,7 @@ struct cp_rng_tests {
 	unsigned int blocksize;
 };
 
-static const struct cp_rng_tests testcases[] = {
+static const struct cp_rng_tests testcases_rng[] = {
 	{ "HMAC SHA-1 DRBG NOPR", "drbg_nopr_hmac_sha1", 20 },
 	{ "HMAC SHA-256 DRBG NOPR", "drbg_nopr_hmac_sha256", 32 },
 	{ "HMAC SHA-384 DRBG NOPR", "drbg_nopr_hmac_sha384", 48 },
@@ -118,19 +118,19 @@ static const struct cp_rng_tests testcases[] = {
 //	{ "FIPS mode ANSI X9.31", "fips_ansi_cprng", 16 },
 };
 
-static struct cp_test cp_rng_testdef[(ARRAY_SIZE(testcases))];
+static struct cp_test cp_rng_testdef[(ARRAY_SIZE(testcases_rng))];
 
 void cp_rng_register(struct cp_test **rng_test, size_t *entries)
 {
 	size_t i = 0;
 
-	for (i = 0; i < ARRAY_SIZE(testcases); i++) {
+	for (i = 0; i < ARRAY_SIZE(testcases_rng); i++) {
 		cp_rng_testdef[i].enc = 0;
-		cp_rng_testdef[i].testname = testcases[i].testname;
-		cp_rng_testdef[i].driver_name = testcases[i].driver_name;
+		cp_rng_testdef[i].testname = testcases_rng[i].testname;
+		cp_rng_testdef[i].driver_name = testcases_rng[i].driver_name;
 		cp_rng_testdef[i].type = "rng";
 		cp_rng_testdef[i].exectime = DFLT_EXECTIME;
-		cp_rng_testdef[i].u.rng.blocksize = testcases[i].blocksize;
+		cp_rng_testdef[i].u.rng.blocksize = testcases_rng[i].blocksize;
 		cp_rng_testdef[i].init_test = cp_rng_init_test;
 		cp_rng_testdef[i].fini_test = cp_rng_fini_test;
 		cp_rng_testdef[i].exec_test = cp_rng_exec_test;

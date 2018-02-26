@@ -83,7 +83,7 @@ do
 
 	LD_LIBRARY_PATH=$libdir LD_PRELOAD=$libname $hasher --status -c $CHKFILE
 	[ $? -ne 0 ] && echo_fail "Verification of checker file $CHKFILE with hasher $hasher failed"
-	
+
 	a=$(LD_LIBRARY_PATH=$libdir LD_PRELOAD=$libname $hasher -b 123 $0 | cut -f 1 -d" ")
 	b=$(openssl dgst -$hash -hmac 123 $0 | cut -f 2 -d" ")
 	[ x"$a" != x"$b" ] && {
